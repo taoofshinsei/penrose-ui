@@ -1,11 +1,16 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { CContainer } from '@coreui/react';
 import { ColorPickers } from './ColorPickers';
+import GammaSettings from './GammaSettings';
+import StandardOptions from './StandardOptions';
 
 export function Sample() {
+    const [serverSettings, setServerSettings] = useState(getDefaultPost());
+    const [serverAddress, setServerAddress] = useState('localhost');
+
     // TODO: figure out how to access non-local machine (or does this act as a server that devices connect to?) 
     function getServerAddress() {
-        return 'http://localhost:8080';
+        return 'http://' + serverAddress + ':8080';
     };
 
     function getDefaultPost() {
@@ -24,7 +29,7 @@ export function Sample() {
 
     // POST request to change configuration
     function getPostCommand(jsonBlob) {
-        var template = getDefaultPost();
+        var template = serverSettings;
         for (let key in jsonBlob) {
             template[key] = jsonBlob[key];
         }
@@ -36,7 +41,7 @@ export function Sample() {
     };
 
     function generateRGBString(r, g, b) {
-        return '[' + r + ', ' + g + ', ' + b + ']';
+        return [r, g, b];
     };
 
     function setColor1(r, g, b) {
@@ -78,8 +83,17 @@ export function Sample() {
             });
     };
 
+    function updateOption(optionName, newValue) {
+        var newSettings = serverSettings;
+        newSettings[optionName] = newValue;
+        setServerSettings(newSettings);
+        sendServerCommand(getPostCommand(newSettings));
+    }
+
     return (
         <CContainer>
+            <StandardOptions baseOptions={serverSettings} onUpdate={updateOption} />
+            <GammaSettings baseOptions={serverSettings} onUpdate={updateOption} />
             <ColorPickers r1={0} g1={0} b1={0}  onChange1={setColor1} r2={255} g2={255} b2={255} onChange2={setColor2}/>
         </CContainer>
     );
