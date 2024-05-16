@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { CContainer, CButton } from '@coreui/react';
+import { CContainer, CButton, CInput, CFormGroup, CLabel } from '@coreui/react';
 import { ColorPickers } from './ColorPickers';
 import GammaSettings from './GammaSettings';
 import StandardOptions from './StandardOptions';
@@ -13,11 +13,13 @@ export function Sample() {
         color2: [255, 255, 255]
     });
     const prevState = useRef(config);
-    const [serverAddress, setServerAddress] = useState('localhost');
+    const [serverAddress, setServerAddress] = useState('localhost');  // Default to 'localhost'
 
     useEffect(() => {
-        fetchConfig();
-    }, []);
+        if (serverAddress) {
+            fetchConfig();
+        }
+    }, [serverAddress]);
 
     useEffect(() => {
         const debounceId = setTimeout(() => {
@@ -95,6 +97,16 @@ export function Sample() {
 
     return (
         <CContainer>
+            <CFormGroup>
+                <CLabel htmlFor="serverAddress">Server Address</CLabel>
+                <CInput
+                    type="text"
+                    id="serverAddress"
+                    placeholder="Enter server IP"
+                    value={serverAddress}
+                    onChange={(e) => setServerAddress(e.target.value)}
+                />
+            </CFormGroup>
             <StandardOptions baseOptions={config} onUpdate={updateOption} />
             <GammaSettings baseOptions={config} onUpdate={updateOption} />
             <ColorPickers
