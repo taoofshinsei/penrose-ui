@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { CContainer, CButton, CInput, CFormGroup, CLabel } from '@coreui/react';
+import { CContainer, CButton, CInput } from '@coreui/react';
 import { ColorPickers } from './ColorPickers';
 import GammaSettings from './GammaSettings';
 import StandardOptions from './StandardOptions';
@@ -97,16 +97,17 @@ export function Sample() {
 
     return (
         <CContainer>
-            <CFormGroup>
-                <CLabel htmlFor="serverAddress">Server Address</CLabel>
-                <CInput
+            <div className="form-group">
+                <label htmlFor="serverAddress">Server Address</label>
+                <input
                     type="text"
                     id="serverAddress"
+                    className="form-control"
                     placeholder="Enter server IP"
                     value={serverAddress}
                     onChange={(e) => setServerAddress(e.target.value)}
                 />
-            </CFormGroup>
+            </div>
             <StandardOptions baseOptions={config} onUpdate={updateOption} />
             <GammaSettings baseOptions={config} onUpdate={updateOption} />
             <ColorPickers
