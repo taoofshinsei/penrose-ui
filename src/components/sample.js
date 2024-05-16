@@ -13,7 +13,7 @@ export function Sample() {
         color2: [255, 255, 255]
     });
     const prevState = useRef(config);
-    const [serverAddress, setServerAddress] = useState('localhost');
+    const [serverAddress, setServerAddress] = useState('10.1.10.71');
 
     useEffect(() => {
         fetchConfig();
