@@ -1,4 +1,5 @@
-import { CAccordion, CAccordionBody, CAccordionHeader, CAccordionItem } from "@coreui/react";
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ColorPicker from "./ColorPicker";
 
 export function ColorPickers({r1, g1, b1, onChange1, r2, g2, b2, onChange2}) {
@@ -13,20 +14,16 @@ export function ColorPickers({r1, g1, b1, onChange1, r2, g2, b2, onChange2}) {
     // TODO: Do we want a different set of presets for color 2?
 
     return (
-        <CAccordion>
-            <CAccordionItem itemKey={1}>
-                <CAccordionHeader>Color #1</CAccordionHeader>
-                <CAccordionBody>
-                    <ColorPicker r={r1} g={g1} b={b1} onChange={onChange1} presetColors={presetColors}/>
-                </CAccordionBody>
-            </CAccordionItem>
-            <CAccordionItem itemKey={2}>
-                <CAccordionHeader>Color #2</CAccordionHeader>
-                <CAccordionBody>
-                    <ColorPicker r={r2} g={g2} b={b2} onChange={onChange2} presetColors={presetColors}/>
-                </CAccordionBody>
-            </CAccordionItem>
-        </CAccordion>
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="color1-content" id="color1-header">Color #1</AccordionSummary>
+            <AccordionDetails itemKey={1}>
+                <ColorPicker r={r1} g={g1} b={b1} onChange={onChange1} presetColors={presetColors}/>
+            </AccordionDetails>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="color2-content" id="color2-header">Color #2</AccordionSummary>
+            <AccordionDetails itemKey={2}>
+                <ColorPicker r={r2} g={g2} b={b2} onChange={onChange2} presetColors={presetColors}/>
+            </AccordionDetails>
+        </Accordion>
     );
 };
 

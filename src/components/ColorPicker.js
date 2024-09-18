@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { RgbColorPicker } from "react-colorful";
-import { CContainer } from '@coreui/react';
+import { Container } from '@mui/material';
 
 export default function ColorPicker({r, g, b, onChange, presetColors}) {
     const [color, setColor] = useState({ r: r, g: g, b: b });
@@ -11,7 +11,7 @@ export default function ColorPicker({r, g, b, onChange, presetColors}) {
     }
 
     return (
-        <CContainer>
+        <Container>
             <RgbColorPicker color={color} onChange={onColorChange} />
 
             <div className="picker__swatches">
@@ -24,6 +24,6 @@ export default function ColorPicker({r, g, b, onChange, presetColors}) {
                     />
                 ))}
             </div>
-        </CContainer>
+        </Container>
     );
 };

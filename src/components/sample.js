@@ -1,126 +1,116 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { CContainer, CButton, CInput } from '@coreui/react';
+import React, { useMemo, useState } from 'react';
+import { Container } from '@mui/material';
 import { ColorPickers } from './ColorPickers';
 import GammaSettings from './GammaSettings';
 import StandardOptions from './StandardOptions';
 
 export function Sample() {
-    const [config, setConfig] = useState({
-        size: 5,
-        scale: 10,
-        gamma: [0.3, 0.2, -0.1, -0.4, 0.4],
-        color1: [0, 0, 0],
-        color2: [255, 255, 255]
-    });
-    const prevState = useRef(config);
-    const [serverAddress, setServerAddress] = useState('localhost');  // Default to 'localhost'
+    const [serverSettings, setServerSettings] = useState(getDefaultPost());
+    const [serverAddress, setServerAddress] = useState('localhost');
 
-    useEffect(() => {
-        if (serverAddress) {
-            fetchConfig();
-        }
+    // Initializer to get the initial state of the penrose tile app
+    useMemo(() => {
+        sendServerCommand(getGetCommand(), setServerSettings);
     }, [serverAddress]);
 
-    useEffect(() => {
-        const debounceId = setTimeout(() => {
-            if (JSON.stringify(prevState.current) !== JSON.stringify(config)) {
-                sendServerCommand(getPostCommand());
-                prevState.current = config;
-            }
-        }, 500);
+    // TODO: figure out how to access non-local machine (or does this act as a server that devices connect to?) 
+    function getServerAddress() {
+        return 'http://' + serverAddress + ':8080';
+    };
 
-        return () => clearTimeout(debounceId);
-    }, [config]);
-
-    function fetchConfig() {
-        setTimeout(() => { // Add delay
-            fetch(getServerAddress())
-                .then(response => response.json())
-                .then(data => {
-                    setConfig({
-                        size: parseInt(data.size, 10),
-                        scale: parseInt(data.scale, 10),
-                        gamma: data.gamma.split(', ').map(Number),
-                        color1: data.color1.split(', ').map(Number),
-                        color2: data.color2.split(', ').map(Number)
-                    });
-                })
-                .catch(error => console.error('Failed to fetch config:', error));
-        }, 2000); // 2-second delay
+    function getDefaultPost() {
+        // TODO: initialize with a GET call to get the default values and update the default post to reflect those values? Or just do something smarter idk
+        var template = {
+            "height": 1000,
+            "width": 1920,
+            "scale": 60,
+            "size": 5,
+            "gamma": [0.3, 0.2, -0.1, -0.4, 0.4],
+            "color1": [200, 75, 0],
+            "color2": [255, 255, 0]
+        };
+        return template;
     }
 
-    function handleStateChange(property, value) {
-        setConfig(prev => ({
-            ...prev,
-            [property]: value
-        }));
-    }
-
-    function getPostCommand() {
+    // POST request to change configuration
+    function getPostCommand(jsonBlob) {
+        var template = serverSettings;
+        for (let key in jsonBlob) {
+            template[key] = jsonBlob[key];
+        }
         return {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(config)
+            body: JSON.stringify(template)
         };
-    }
+    };
 
-    function sendServerCommand(command) {
-        return fetch(getServerAddress(), command)
-            .then(response => response.json())
-            .then(data => console.log('Command sent successfully:', data))
-            .catch(error => console.error('Error sending command:', error));
-    }
-
-    function getServerAddress() {
-        return 'http://' + serverAddress + ':8080';
-    }
-
-    function executeCommand(commandType) {
-        sendServerCommand({
-            method: 'POST',
+    function getGetCommand() {
+        return {
+            method: 'GET',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ command: commandType })
-        }).then(() => {
-            if (commandType === 'randomize_colors') {
-                fetchConfig();
-            }
-        });
+        }
     }
+
+    function generateRGBString(r, g, b) {
+        return [r, g, b];
+    };
+
+    function setColor1(r, g, b) {
+        console.log('setColor1: ' + r + ', ' + g + ', ' + b);
+        sendServerCommand(getPostCommand({ "color1": generateRGBString(r, g, b) }));
+    };
+
+    function setColor2(r, g, b) {
+        console.log('setColor2: ' + r + ', ' + g + ', ' + b);
+        sendServerCommand(getPostCommand({ "color2": generateRGBString(r, g, b) }));
+    };
+
+    function printDebug(command) {
+        var body = command['body'];
+        console.log('start debug');
+        console.log(body);
+        console.log('end debug');
+    }
+
+    function sendServerCommand(command, dataParser) {
+        printDebug(command);
+        fetch(getServerAddress(), command)
+            .then(async response => {
+                const isJson = response.headers.get('content-type')?.includes('application/json');
+                const data = isJson && await response.json();
+
+                // check for error response
+                if (!response.ok) {
+                    // get error message from body or default to response status
+                    const error = (data && data.message) || response.status;
+                    return Promise.reject(error);
+                }
+
+                console.log('No errors sending command.');
+                console.log(data);
+                if (dataParser !== undefined) {
+                    dataParser(data);
+                }
+            })
+            .catch(error => {
+                console.error('There was an error sending command to the server: ' + error);
+            });
+    };
 
     function updateOption(optionName, newValue) {
-        setConfig(prev => ({
-            ...prev,
-            [optionName]: newValue
-        }));
-        sendServerCommand(getPostCommand({ [optionName]: newValue }));
+        var newSettings = serverSettings;
+        newSettings[optionName] = newValue;
+        setServerSettings(newSettings);
+        sendServerCommand(getPostCommand(newSettings));
     }
 
     return (
-        <CContainer>
-            <div className="form-group">
-                <label htmlFor="serverAddress">Server Address</label>
-                <input
-                    type="text"
-                    id="serverAddress"
-                    className="form-control"
-                    placeholder="Enter server IP"
-                    value={serverAddress}
-                    onChange={(e) => setServerAddress(e.target.value)}
-                />
-            </div>
-            <StandardOptions baseOptions={config} onUpdate={updateOption} />
-            <GammaSettings baseOptions={config} onUpdate={updateOption} />
-            <ColorPickers
-                r1={config.color1[0]} g1={config.color1[1]} b1={config.color1[2]}
-                onChange1={(r, g, b) => handleStateChange('color1', [r, g, b])}
-                r2={config.color2[0]} g2={config.color2[1]} b2={config.color2[2]}
-                onChange2={(r, g, b) => handleStateChange('color2', [r, g, b])}
-            />
-            <div>
-                <CButton color="info" onClick={() => executeCommand('toggle_shader')}>Toggle Shader</CButton>
-                <CButton color="info" onClick={() => executeCommand('randomize_colors')}>Randomize Colors</CButton>
-            </div>
-        </CContainer>
+        <Container maxWidth='xl'>
+            <StandardOptions baseOptions={serverSettings} onUpdate={updateOption} />
+            <GammaSettings baseOptions={serverSettings} onUpdate={updateOption} />
+            <ColorPickers r1={0} g1={0} b1={0}  onChange1={setColor1} r2={255} g2={255} b2={255} onChange2={setColor2}/>
+        </Container>
     );
 }
 

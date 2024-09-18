@@ -1,16 +1,16 @@
-import logo from './logo.svg';
 import './App.css';
 import { Sample } from './components/sample';
 import './color-styles.css';
-import '@coreui/coreui/dist/css/coreui.min.css';
+import * as React from 'react';
+import CssBaseline from '@mui/material/CssBaseline';
+import { Container } from '@mui/material';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <Sample />
-      </header>
-    </div>
+    <Container maxWidth='xl' className="App-header">
+      <CssBaseline />
+      <Sample/>
+    </Container>
   );
 }
 
