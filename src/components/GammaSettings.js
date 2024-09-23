@@ -19,8 +19,8 @@ export function GammaSettings({baseOptions, onUpdate}) {
     }
 
     return (
-        <Grid container spacing={2}>
-            <Grid size={8}>
+        <Grid container spacing={2} display="flex">
+            <Grid size={10} display="flex">
                 <Typography id="gamma0-slider" gutterBottom>Gamma 1</Typography>
                 <Grid container spacing={2} sx={{alignItems: 'center', flexGrow: 1}} size="grow">
                     <Grid size="grow">
@@ -46,7 +46,7 @@ export function GammaSettings({baseOptions, onUpdate}) {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid size={8}>
+            <Grid size={10} display="flex">
                 <Typography id="gamma1-slider" gutterBottom>Gamma 2</Typography>
                 <Grid container spacing={2} sx={{alignItems: 'center', flexGrow: 1}} size="grow">
                     <Grid size="grow">
@@ -72,7 +72,7 @@ export function GammaSettings({baseOptions, onUpdate}) {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid size={8}>
+            <Grid size={10} display="flex">
                 <Typography id="gamma2-slider" gutterBottom>Gamma 3</Typography>
                 <Grid container spacing={2} sx={{alignItems: 'center', flexGrow: 1}} size="grow">
                     <Grid size="grow">
@@ -98,7 +98,7 @@ export function GammaSettings({baseOptions, onUpdate}) {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid size={8}>
+            <Grid size={10} display="flex">
                 <Typography id="gamma3-slider" gutterBottom>Gamma 4</Typography>
                 <Grid container spacing={2} sx={{alignItems: 'center', flexGrow: 1}} size="grow">
                     <Grid size="grow">
@@ -124,7 +124,7 @@ export function GammaSettings({baseOptions, onUpdate}) {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid size={8}>
+            <Grid size={10} display="flex">
                 <Typography id="gamma4-slider" gutterBottom>Gamma 5</Typography>
                 <Grid container spacing={2} sx={{alignItems: 'center', flexGrow: 1}} size="grow">
                     <Grid size="grow">

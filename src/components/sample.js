@@ -8,17 +8,17 @@ import SettingsIcon from '@mui/icons-material/Settings';
 
 export function Sample() {
     const [serverSettings, setServerSettings] = useState(getDefaultPost());
-    const [serverAddress, setServerAddress] = useState('localhost');
     const [settingsOpen, setSettingsOpen] = useState(false);
+    const [ipPort, setIpPort] = useState('192.168.1.1:8080');
 
     // Initializer to get the initial state of the penrose tile app
     useMemo(() => {
         sendServerCommand(getGetCommand(), setServerSettings);
-    }, [serverAddress]);
+    }, [ipPort]);
 
     // TODO: figure out how to access non-local machine (or does this act as a server that devices connect to?) 
     function getServerAddress() {
-        return 'http://' + serverAddress + ':8080';
+        return 'http://' + ipPort;
     };
 
     function getDefaultPost() {
@@ -111,7 +111,7 @@ export function Sample() {
     return (
         <Container maxWidth='xl'>
             <Button onClick={() => setSettingsOpen(true)} startIcon={<SettingsIcon/>} />
-            <SettingsDialog baseOptions={serverSettings} onUpdate={updateOption} isOpen={settingsOpen} setIsOpen={setSettingsOpen} />
+            <SettingsDialog baseOptions={serverSettings} onUpdate={updateOption} isOpen={settingsOpen} setIsOpen={setSettingsOpen} ipPort={ipPort} setIpPort={setIpPort} />
             <GammaSettings baseOptions={serverSettings} onUpdate={updateOption} />
             <ColorPickers r1={0} g1={0} b1={0}  onChange1={setColor1} r2={255} g2={255} b2={255} onChange2={setColor2}/>
         </Container>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { RgbColorPicker } from "react-colorful";
-import { Container } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 
 export default function ColorPicker({r, g, b, onChange, presetColors}) {
     const [color, setColor] = useState({ r: r, g: g, b: b });
@@ -11,7 +11,7 @@ export default function ColorPicker({r, g, b, onChange, presetColors}) {
     }
 
     return (
-        <Container>
+        <Grid size="grow" display="flex">
             <RgbColorPicker color={color} onChange={onColorChange} />
 
             <div className="picker__swatches">
@@ -19,11 +19,11 @@ export default function ColorPicker({r, g, b, onChange, presetColors}) {
                     <button
                         key={presetColor}
                         className="picker__swatch"
-                        style={{ background: presetColor }}
+                        style={{ background: presetColor, color: presetColor }}
                         onClick={() => onColorChange(presetColor)}
                     />
                 ))}
             </div>
-        </Container>
+        </Grid>
     );
 };

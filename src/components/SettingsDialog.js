@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Dialog, DialogTitle, DialogContent, Input, Slider, Typography } from '@mui/material';
+import * as React from 'react';
+import { Dialog, DialogTitle, DialogContent, Input, Slider, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
   
-export function SettingsDialog({baseOptions, onUpdate, isOpen, setIsOpen}) {
-    const [scale, setScale] = useState(baseOptions['scale']);
-    const [size, setSize] = useState(baseOptions['size']);
+export function SettingsDialog({baseOptions, onUpdate, isOpen, setIsOpen, ipPort, setIpPort}) {
+    const [scale, setScale] = React.useState(baseOptions['scale']);
+    const [size, setSize] = React.useState(baseOptions['size']);
 
     function updateScale(e) {
         var newScale = e.target.value;
@@ -22,11 +22,25 @@ export function SettingsDialog({baseOptions, onUpdate, isOpen, setIsOpen}) {
         setIsOpen(false);
     }
 
+    function updateIpPort(event) {
+        setIpPort(event.target.value);
+    }
+
     return (
         <Dialog fullWidth open={isOpen} onClose={() => onClose()}>
             <DialogTitle>Settings</DialogTitle>
             <DialogContent>
                 <Grid container spacing={2}>
+                    <Grid size={12}>
+                        <TextField
+                            required
+                            id="ip-port-input"
+                            label="IP & Port"
+                            variant="outlined"
+                            defaultValue={ipPort}
+                            onChange={updateIpPort}
+                        />
+                    </Grid>
                     <Grid size={8}>
                         <Typography id="scale-slider" gutterBottom>Scale</Typography>
                         <Grid container spacing={2} sx={{ alignItems: 'center', flexGrow: 1 }} size="grow">
