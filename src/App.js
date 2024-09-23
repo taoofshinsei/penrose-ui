@@ -7,7 +7,7 @@ import { Container } from '@mui/material';
 
 function App() {
   return (
-    <Container maxWidth='xl' className="App-header">
+    <Container maxWidth={false} className="App-header">
       <CssBaseline />
       <Sample/>
     </Container>

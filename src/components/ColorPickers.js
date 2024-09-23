@@ -1,5 +1,5 @@
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Typography } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import ColorPicker from "./ColorPicker";
 
 export function ColorPickers({r1, g1, b1, onChange1, r2, g2, b2, onChange2}) {
@@ -14,16 +14,16 @@ export function ColorPickers({r1, g1, b1, onChange1, r2, g2, b2, onChange2}) {
     // TODO: Do we want a different set of presets for color 2?
 
     return (
-        <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="color1-content" id="color1-header">Color #1</AccordionSummary>
-            <AccordionDetails itemKey={1}>
+        <Grid container spacing={2}>
+            <Grid size={6}>
+                <Typography id="color1" gutterBottom>Color #1</Typography>
                 <ColorPicker r={r1} g={g1} b={b1} onChange={onChange1} presetColors={presetColors}/>
-            </AccordionDetails>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="color2-content" id="color2-header">Color #2</AccordionSummary>
-            <AccordionDetails itemKey={2}>
+            </Grid>
+            <Grid size={6}>
+                <Typography id="color2" gutterBottom>Color #2</Typography>
                 <ColorPicker r={r2} g={g2} b={b2} onChange={onChange2} presetColors={presetColors}/>
-            </AccordionDetails>
-        </Accordion>
+            </Grid>
+        </Grid>
     );
 };
 
