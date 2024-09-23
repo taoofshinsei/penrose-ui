@@ -1,12 +1,15 @@
 import React, { useMemo, useState } from 'react';
-import { Container } from '@mui/material';
+import { Button, Container } from '@mui/material';
 import { ColorPickers } from './ColorPickers';
 import GammaSettings from './GammaSettings';
 import StandardOptions from './StandardOptions';
+import SettingsDialog from './SettingsDialog';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 export function Sample() {
     const [serverSettings, setServerSettings] = useState(getDefaultPost());
     const [serverAddress, setServerAddress] = useState('localhost');
+    const [settingsOpen, setSettingsOpen] = useState(false);
 
     // Initializer to get the initial state of the penrose tile app
     useMemo(() => {
@@ -107,7 +110,8 @@ export function Sample() {
 
     return (
         <Container maxWidth='xl'>
-            <StandardOptions baseOptions={serverSettings} onUpdate={updateOption} />
+            <Button onClick={() => setSettingsOpen(true)} startIcon={<SettingsIcon/>} />
+            <SettingsDialog baseOptions={serverSettings} onUpdate={updateOption} isOpen={settingsOpen} setIsOpen={setSettingsOpen} />
             <GammaSettings baseOptions={serverSettings} onUpdate={updateOption} />
             <ColorPickers r1={0} g1={0} b1={0}  onChange1={setColor1} r2={255} g2={255} b2={255} onChange2={setColor2}/>
         </Container>
