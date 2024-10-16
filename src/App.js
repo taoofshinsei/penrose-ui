@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { Sample } from './components/sample';
+import { GraphUI } from './components/GraphUI';
 import './color-styles.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
 
@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Sample />
+        <GraphUI />
       </header>
     </div>
   );
